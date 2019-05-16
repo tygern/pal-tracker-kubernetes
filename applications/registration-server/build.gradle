@@ -5,3 +5,8 @@ dependencies {
     compile project(":components:projects")
     compile project(":components:users")
 }
+
+bootRun.environment([
+    "SERVER_PORT": "8883"
+])
+
