@@ -1,17 +1,23 @@
 package io.pivotal.pal.tracker.testsupport;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
+import org.mariadb.jdbc.MariaDbDataSource;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 
 public class TestDataSourceFactory {
 
     public static DataSource create(String name) {
-        MysqlDataSource dataSource = new MysqlDataSource();
+        MariaDbDataSource dataSource = new MariaDbDataSource();
 
-        dataSource.setUrl("jdbc:mysql://localhost:3306/" + name + "?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false");
-        dataSource.setUser("tracker");
+        try {
+            dataSource.setUrl("jdbc:mariadb://localhost:3306/" + name + "?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false");
+            dataSource.setUser("tracker");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Database doesn't work: " + e.getMessage());
+        }
 
         return dataSource;
     }
