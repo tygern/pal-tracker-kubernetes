@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10.3.15-bionic
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+  registration-server:
+    build: applications/registration-server
+    ports:
+      - "8083:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mariadb://db:3306/tracker_registration_dev?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+    depends_on:
+      - db
+  allocations-server:
+    build: applications/allocations-server
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mariadb://db:3306/tracker_allocations_dev?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+      REGISTRATION_SERVER_ENDPOINT": "http://registration-server:8080"
+    depends_on:
+      - db
+  backlog-server:
+    build: applications/backlog-server
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mariadb://db:3306/tracker_backlog_dev?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+      REGISTRATION_SERVER_ENDPOINT": "http://registration-server:8080"
+    depends_on:
+      - db
+  timesheets-server:
+    build: applications/timesheets-server
+    ports:
+      - "8084:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mariadb://db:3306/tracker_timesheets_dev?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+      REGISTRATION_SERVER_ENDPOINT": "http://registration-server:8080"
+    depends_on:
+      - db
