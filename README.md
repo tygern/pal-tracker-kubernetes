@@ -20,12 +20,6 @@
     ./gradlew build
     ```
 
-1.  Stop the database.
-
-    ```bash
-    docker-compose down
-    ```
-
 1.  Run the apps.
 
     ```bash
